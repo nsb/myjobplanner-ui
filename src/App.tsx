@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 import {
   ChakraProvider,
@@ -15,13 +15,37 @@ import { ColorModeSwitcher } from './ColorModeSwitcher'
 import { Logo } from './Logo'
 
 function App () {
-  const {
-    isLoading,
-    error,
-    isAuthenticated,
-    loginWithRedirect,
-    user
-  } = useAuth0()
+  const { isLoading, error, isAuthenticated, loginWithRedirect, getAccessTokenSilently, user } = useAuth0()
+  const [businesses, setBusinesses] = useState(null)
+
+  useEffect(() => {
+    const getBusinesses = async () => {
+      const domain = 'localhost:3000'
+
+      try {
+        const accessToken = await getAccessTokenSilently({
+          audience: 'https://api.myjobplanner.com',
+          scope: 'read:business'
+        })
+
+        const businessesUrl = `http://${domain}/v1/businesses`
+
+        const businessesResponse = await fetch(businessesUrl, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        })
+
+        const result = await businessesResponse.json()
+
+        setBusinesses(result)
+      } catch (e) {
+        console.log(e)
+      }
+    }
+
+    getBusinesses()
+  }, [getAccessTokenSilently, user?.sub])
 
   if (error) {
     return <div>Oops... {error.message}</div>
@@ -46,12 +70,13 @@ function App () {
         <ColorModeSwitcher justifySelf="flex-end" />
         <VStack spacing={8}>
         { user && (
-        <div>
-          <img src={user.picture} alt={user.name} />
-          <h2>{user.name}</h2>
-          <p>{user.email}</p>
-        </div>)
-      }
+          <div>
+            <img src={user.picture} alt={user.name} />
+            <h2>{user.name}</h2>
+            <p>{user.email}</p>
+            { JSON.stringify(businesses) }
+          </div>)
+        }
         </VStack>
         <VStack spacing={8}>
           <Logo h="40vmin" pointerEvents="none" />

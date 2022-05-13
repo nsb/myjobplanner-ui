@@ -55,5 +55,6 @@
     "eslint-plugin-n": "^15.2.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-react": "^7.29.4"
-  }
+  },
+  "proxy": "http://myjobplanner-api.default.10.98.41.24.sslip.io"
 }
