@@ -1,5 +1,5 @@
-import React from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+import React from 'react'
+import { useAuth0 } from '@auth0/auth0-react'
 import {
   ChakraProvider,
   Box,
@@ -9,19 +9,30 @@ import {
   Code,
   Grid,
   theme,
-} from "@chakra-ui/react"
-import { ColorModeSwitcher } from "./ColorModeSwitcher"
-import { Logo } from "./Logo"
+  Spinner
+} from '@chakra-ui/react'
+import { ColorModeSwitcher } from './ColorModeSwitcher'
+import { Logo } from './Logo'
 
-function App() {
-  const { isLoading, error, isAuthenticated, loginWithRedirect } = useAuth0();
-  
+function App () {
+  const {
+    isLoading,
+    error,
+    isAuthenticated,
+    loginWithRedirect,
+    user
+  } = useAuth0()
+
   if (error) {
-    return <div>Oops... {error.message}</div>;
+    return <div>Oops... {error.message}</div>
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <Box textAlign="center">
+        <Spinner />
+      </Box>
+    )
   }
 
   if (!isAuthenticated) {
@@ -33,6 +44,15 @@ function App() {
     <Box textAlign="center" fontSize="xl">
       <Grid minH="100vh" p={3}>
         <ColorModeSwitcher justifySelf="flex-end" />
+        <VStack spacing={8}>
+        { user && (
+        <div>
+          <img src={user.picture} alt={user.name} />
+          <h2>{user.name}</h2>
+          <p>{user.email}</p>
+        </div>)
+      }
+        </VStack>
         <VStack spacing={8}>
           <Logo h="40vmin" pointerEvents="none" />
           <Text>
@@ -51,7 +71,7 @@ function App() {
       </Grid>
     </Box>
   </ChakraProvider>
-  );
+  )
 }
 
-export default App;
+export default App
