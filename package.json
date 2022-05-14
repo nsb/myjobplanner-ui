@@ -14,6 +14,7 @@
     "@types/node": "^16.11.34",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.3",
+    "axios": "^0.27.2",
     "framer-motion": "^6.3.3",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
@@ -26,7 +27,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "openapi-generator": "npx openapi-generator-cli generate -g typescript-axios -i http://myjobplanner-api.default.10.98.41.24.sslip.io/schema.json -o src/apiclient"
   },
   "eslintConfig": {
     "extends": [
@@ -47,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "@openapitools/openapi-generator-cli": "^2.5.1",
     "@typescript-eslint/eslint-plugin": "^5.23.0",
     "@typescript-eslint/parser": "^5.23.0",
     "eslint": "^8.15.0",

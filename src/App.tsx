@@ -13,14 +13,16 @@ import {
 } from '@chakra-ui/react'
 import { ColorModeSwitcher } from './ColorModeSwitcher'
 import { Logo } from './Logo'
+import ApiClient from './ApiClient'
+import type { Business } from './apiclient'
 
 function App () {
   const { isLoading, error, isAuthenticated, loginWithRedirect, getAccessTokenSilently, user } = useAuth0()
-  const [businesses, setBusinesses] = useState(null)
+  const [businesses, setBusinesses] = useState<Business[] | undefined>(undefined)
 
   useEffect(() => {
     const getBusinesses = async () => {
-      const domain = 'localhost:3000'
+      // const domain = 'localhost:3000'
 
       try {
         const accessToken = await getAccessTokenSilently({
@@ -28,17 +30,12 @@ function App () {
           scope: 'read:business'
         })
 
-        const businessesUrl = `http://${domain}/v1/businesses`
+        const headers = { Authorization: `Bearer ${accessToken}` }
+        const { data } = await ApiClient.findBusinesses(
+          0, 20, 'ASC', 'created', { headers }
+        )
 
-        const businessesResponse = await fetch(businessesUrl, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        })
-
-        const result = await businessesResponse.json()
-
-        setBusinesses(result)
+        setBusinesses(data.data)
       } catch (e) {
         console.log(e)
       }
