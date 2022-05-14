@@ -4,6 +4,7 @@ import './index.css'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { Auth0Provider } from '@auth0/auth0-react'
+import { StateProvider } from './Store'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -16,9 +17,11 @@ root.render(
     audience='https://api.myjobplanner.com'
     scope='openid email create:business read:business'
   >
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    <StateProvider>
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>
+    </StateProvider>
   </Auth0Provider>
 )
 
