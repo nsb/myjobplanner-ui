@@ -8,8 +8,7 @@ import {
   VStack,
   Code,
   Grid,
-  theme,
-  Spinner
+  theme
 } from '@chakra-ui/react'
 import { ColorModeSwitcher } from './ColorModeSwitcher'
 import { Logo } from './Logo'
@@ -19,11 +18,11 @@ import type { Business } from './apiclient'
 function App () {
   const { isLoading, error, isAuthenticated, loginWithRedirect, getAccessTokenSilently, user } = useAuth0()
   const [businesses, setBusinesses] = useState<Business[] | undefined>(undefined)
+  const [businessesIsLoading, setBusinessesIsLoading] = useState(false)
 
   useEffect(() => {
     const getBusinesses = async () => {
-      // const domain = 'localhost:3000'
-
+      setBusinessesIsLoading(true)
       try {
         const accessToken = await getAccessTokenSilently({
           audience: 'https://api.myjobplanner.com',
@@ -44,6 +43,10 @@ function App () {
     getBusinesses()
   }, [getAccessTokenSilently, user?.sub])
 
+  useEffect(() => {
+    setBusinessesIsLoading(false)
+  }, [businesses])
+
   if (error) {
     return <div>Oops... {error.message}</div>
   }
@@ -51,7 +54,7 @@ function App () {
   if (isLoading) {
     return (
       <Box textAlign="center">
-        <Spinner />
+        <Text>Loading...</Text>
       </Box>
     )
   }
@@ -71,7 +74,7 @@ function App () {
             <img src={user.picture} alt={user.name} />
             <h2>{user.name}</h2>
             <p>{user.email}</p>
-            { JSON.stringify(businesses) }
+            { !businessesIsLoading && JSON.stringify(businesses) }
           </div>)
         }
         </VStack>
