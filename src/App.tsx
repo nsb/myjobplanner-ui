@@ -13,7 +13,7 @@ import {
 import { ColorModeSwitcher } from './ColorModeSwitcher'
 import { Logo } from './Logo'
 import ApiClient from './ApiClient'
-import type { Business } from './apiclient'
+import type { Business } from './api'
 
 function App () {
   const { isLoading, error, isAuthenticated, loginWithRedirect, getAccessTokenSilently, user } = useAuth0()
